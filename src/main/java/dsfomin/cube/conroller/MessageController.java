@@ -3,16 +3,18 @@ package dsfomin.cube.conroller;
 import dsfomin.cube.domain.Message;
 import dsfomin.cube.repo.MessageRepo;
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
-@RequestMapping("massage")
+@RequestMapping("message")
 public class MessageController {
     private final MessageRepo messageRepo;
 
+    @Autowired
     public MessageController(MessageRepo messageRepo) {
         this.messageRepo = messageRepo;
     }
