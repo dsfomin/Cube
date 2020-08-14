@@ -1,6 +1,8 @@
 package dsfomin.cube.conroller;
 
+import com.fasterxml.jackson.annotation.JsonView;
 import dsfomin.cube.domain.Message;
+import dsfomin.cube.domain.Views;
 import dsfomin.cube.repo.MessageRepo;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,32 +22,32 @@ public class MessageController {
     }
 
     @GetMapping
-    public List<Message> getList() {
+    @JsonView(Views.IdName.class)
+    public List<Message> list() {
         return messageRepo.findAll();
     }
 
     @GetMapping("{id}")
-    public Message getMessage(@PathVariable("id") Message message) {
+    @JsonView(Views.FullMessage.class)
+    public Message getOne(@PathVariable("id") Message message) {
         return message;
     }
 
     @PostMapping
-    public Message postMessage(@RequestBody Message message) {
+    public Message create(@RequestBody Message message) {
         message.setCreationTime(LocalDateTime.now());
         return messageRepo.save(message);
     }
 
     @PutMapping("{id}")
-    public Message putMessage(@PathVariable("id") Message messageFromDb, @RequestBody Message message) {
-
+    public Message update(@PathVariable("id") Message messageFromDb, @RequestBody Message message) {
         BeanUtils.copyProperties(message, messageFromDb, "id");
 
         return messageRepo.save(messageFromDb);
     }
 
     @DeleteMapping("{id}")
-    public void deleteMessage(@PathVariable("id") Message message) {
+    public void delete(@PathVariable("id") Message message) {
         messageRepo.delete(message);
     }
 }
-

@@ -21,10 +21,11 @@ public class Message {
     @JsonView(Views.IdName.class)
     private Long id;
 
+    @Column(name = "text")
     @JsonView(Views.IdName.class)
     private String text;
 
-    @Column(updatable = false)
+    @Column(updatable = false, name = "creation_time")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd.MM.yyyy HH:mm:ss")
     @JsonView(Views.FullMessage .class)
     private LocalDateTime creationTime;
