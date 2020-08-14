@@ -1,0 +1,30 @@
+{
+  "name": "Cube",
+  "version": "1.0.0",
+  "main": "webpack.config.js",
+  "repository": "https://github.com/dsfomin/Cube.git",
+  "author": "dsfomin <dsfomin2@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "vue": "^2.6.11",
+    "vue-resource": "^1.5.1"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.11.1",
+    "@babel/preset-env": "^7.11.0",
+    "babel-loader": "^8.1.0",
+    "vue-loader": "^15.9.3",
+    "vue-template-compiler": "^2.6.11",
+    "webpack": "^4.44.1",
+    "webpack-cli": "^3.3.12",
+    "webpack-dev-server": "^3.11.0"
+  },
+  "scripts": {
+    "start": "webpack-dev-server",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "bugs": {
+    "url": "https://github.com/dsfomin/Cube/issues"
+  },
+  "homepage": "https://github.com/dsfomin/Cube#readme"
+}
