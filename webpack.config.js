@@ -10,7 +10,7 @@ module.exports = {
         compress: true,
         port: 8000,
         allowedHosts: [
-            'localhost:8080'
+            'localhost:9000'
         ],
         stats: 'errors-only',
         clientLogLevel: 'error',
@@ -30,6 +30,28 @@ module.exports = {
             {
                 test: /\.vue$/,
                 loader: 'vue-loader'
+            },
+            {
+                test: /\.css$/,
+                use: [
+                    'vue-style-loader',
+                    'css-loader'
+                ]
+            },
+            {
+                test: /\.s(c|a)ss$/,
+                use: [
+                    'vue-style-loader',
+                    'css-loader',
+                    {
+                        loader: 'sass-loader',
+                        options: {
+                            implementation: require('sass'),
+                            fiber: require('fibers'),
+                            indentedSyntax: true
+                        }
+                    }
+                ]
             }
         ]
     },
@@ -40,6 +62,8 @@ module.exports = {
         modules: [
             path.join(__dirname, 'src', 'main', 'resources', 'static', 'js'),
             path.join(__dirname, 'node_modules'),
+            path.join(__dirname, 'src', 'main', 'resources', 'static', 'js','plugin'),
         ],
+        extensions: ['.js'],
     }
 }

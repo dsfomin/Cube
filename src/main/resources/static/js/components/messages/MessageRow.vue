@@ -1,22 +1,34 @@
 <template>
-    <div>
-        <i>({{ message.id }})</i> {{ message.text }}
-        <span style="position: absolute; right: 0">
-            <input type="button" value="Edit" @click="edit" />
-            <input type="button" value="X" @click="del" />
-        </span>
-    </div>
+    <v-card class="my-1">
+        <v-row class="px-4">
+            <v-card-title>
+                <i class="mr-2">{{ message.id }}</i>
+                {{ message.text }}
+            </v-card-title>
+            <v-spacer></v-spacer>
+            <v-card-actions>
+                <span>
+                    <v-btn @click="edit" text rounded>Edit</v-btn>
+                    <v-btn icon @click="del">
+                        <v-icon>delete</v-icon>
+                    </v-btn>
+                </span>
+            </v-card-actions>
+        </v-row>
+    </v-card>
 </template>
 
 <script>
+    import { mapActions } from 'vuex'
     export default {
-        props: ['message', 'editMessage', 'deleteMessage', 'messages'],
+        props: ['message', 'editMessage'],
         methods: {
+            ...mapActions(['removeMessageAction']),
             edit() {
-                this.editMessage(this.message);
+                this.editMessage(this.message)
             },
             del() {
-                this.deleteMessage(this.message)
+                this.removeMessageAction(this.message)
             }
         }
     }
