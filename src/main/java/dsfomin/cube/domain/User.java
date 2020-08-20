@@ -1,6 +1,7 @@
 package dsfomin.cube.domain;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonView;
 import lombok.Data;
 
 import javax.persistence.Column;
@@ -15,14 +16,17 @@ import java.time.LocalDateTime;
 @Data
 public class User implements Serializable {
     @Id
+    @JsonView(Views.IdName.class)
     private String id;
 
+    @JsonView(Views.IdName.class)
     @Column(name = "username")
     private String username;
 
     @Column(name = "email")
     private String email;
 
+    @JsonView(Views.IdName.class)
     @Column(name = "userpic")
     private String userpic;
 

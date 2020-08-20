@@ -2,6 +2,7 @@ package dsfomin.cube.conroller;
 
 import com.fasterxml.jackson.annotation.JsonView;
 import dsfomin.cube.domain.Message;
+import dsfomin.cube.domain.User;
 import dsfomin.cube.domain.Views;
 import dsfomin.cube.dto.EventType;
 import dsfomin.cube.dto.MetaDto;
@@ -14,6 +15,7 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
@@ -55,8 +57,9 @@ public class MessageController {
     }
 
     @PostMapping
-    public Message create(@RequestBody Message message) throws IOException {
+    public Message create(@RequestBody Message message, @AuthenticationPrincipal User user) throws IOException {
         message.setCreationTime(LocalDateTime.now());
+        message.setAuthor(user);
         fillMeta(message);
 
         Message updatedMessage = messageRepo.save(message);
@@ -112,6 +115,7 @@ public class MessageController {
 
     private MetaDto getMeta(String url) throws IOException {
         Document doc = Jsoup.connect(url).get();
+
         Elements title = doc.select("meta[name$=title],meta[property$=title]");
         Elements description = doc.select("meta[name$=description],meta[property$=description]");
         Elements cover = doc.select("meta[name$=image],meta[property$=image]");
