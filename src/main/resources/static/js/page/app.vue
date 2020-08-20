@@ -3,7 +3,7 @@
         <v-app-bar app color="indigo" dark>
             <v-app-bar-nav-icon></v-app-bar-nav-icon>
             <v-toolbar-title>Cube</v-toolbar-title>
-            <v-btn flat class="ml-2"
+            <v-btn text class="ml-2"
                    v-if="profile"
                    :disabled="$route.path === '/'"
                    @click="showMessages"
@@ -12,7 +12,7 @@
             </v-btn>
             <v-spacer></v-spacer>
             <v-btn v-if="profile"
-                   flat
+                   text
                    :disabled="$route.path === '/profile'"
                    @click="showProfile"
             >

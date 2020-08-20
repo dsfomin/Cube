@@ -27,6 +27,15 @@ public class Message {
 
     @Column(updatable = false, name = "creation_time")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd.MM.yyyy HH:mm:ss")
-    @JsonView(Views.FullMessage .class)
+    @JsonView(Views.FullMessage.class)
     private LocalDateTime creationTime;
+
+    @JsonView(Views.FullMessage.class)
+    private String link;
+    @JsonView(Views.FullMessage.class)
+    private String linkTitle;
+    @JsonView(Views.FullMessage.class)
+    private String linkDescription;
+    @JsonView(Views.FullMessage.class)
+    private String linkCover;
 }

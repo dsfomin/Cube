@@ -1,18 +1,19 @@
 <template>
     <v-card class="my-1">
-        <v-row class="px-4">
-            <v-card-title>
-                <i class="mr-2">{{ message.id }}</i>
-                {{ message.text }}
-            </v-card-title>
+        <v-card-title>
+            <i class="mr-2">{{ message.id }}</i>
+            {{ message.text }}
+        </v-card-title>
+        <media v-if="message.link" :message="message"></media>
+        <v-row>
             <v-spacer></v-spacer>
-            <v-card-actions>
-                <span>
-                    <v-btn @click="edit" text rounded>Edit</v-btn>
-                    <v-btn icon @click="del">
-                        <v-icon>delete</v-icon>
-                    </v-btn>
-                </span>
+            <v-card-actions class="mr-3">
+                    <span>
+                        <v-btn @click="edit" text rounded>Edit</v-btn>
+                        <v-btn icon @click="del">
+                            <v-icon>delete</v-icon>
+                        </v-btn>
+                    </span>
             </v-card-actions>
         </v-row>
     </v-card>
@@ -20,8 +21,11 @@
 
 <script>
     import { mapActions } from 'vuex'
+    import Media from "../media/Media.vue";
+
     export default {
         props: ['message', 'editMessage'],
+        components: {Media},
         methods: {
             ...mapActions(['removeMessageAction']),
             edit() {
