@@ -1,27 +1,41 @@
 <template>
-    <v-card class="my-1">
-        <v-card-title>
-            <i class="mr-2">{{ message.id }}</i>
-            {{ message.text }}
-        </v-card-title>
-        <media v-if="message.link" :message="message"></media>
-        <v-row>
-            <v-spacer></v-spacer>
-            <v-card-actions class="mr-3">
-                    <span>
-                        <v-btn @click="edit" text rounded>Edit</v-btn>
-                        <v-btn icon @click="del">
-                            <v-icon>delete</v-icon>
-                        </v-btn>
-                    </span>
-            </v-card-actions>
-        </v-row>
-        <comment-list
-            :comments="message.comments"
-            :message-id="message.id"
-        >
+    <v-card class="my-2">
+        <v-card-text primary-title>
+            <div>
+                <v-avatar
+                        v-if="message.author && message.author.userpic"
+                        size="48px"
+                >
+                    <img
+                            :src="message.author.userpic"
+                            :alt="message.author.username"
+                    >
+                </v-avatar>
 
-        </comment-list>
+                <v-avatar
+                        v-else
+                        size="48px"
+                        color="indigo"
+                >
+                    <v-icon dark>account_circle</v-icon>
+                </v-avatar>
+                <span class="pl-3">{{ authorName }}</span>
+            </div>
+            <div class="pt-3">
+                {{ message.text }}
+            </div>
+        </v-card-text>
+        <media v-if="message.link" :message="message"></media>
+        <v-card-actions>
+            <v-btn value="Edit" @click="edit" small text rounded>Edit</v-btn>
+            <v-btn icon @click="del" small>
+                <v-icon>delete</v-icon>
+            </v-btn>
+        </v-card-actions>
+        <comment-list
+                :comments="message.comments"
+                :message-id="message.id"
+        ></comment-list>
     </v-card>
 </template>
 
@@ -33,6 +47,11 @@
     export default {
         props: ['message', 'editMessage'],
         components: {CommentList, Media},
+        computed: {
+            authorName() {
+                return this.message.author ? this.message.author.username : 'unknown'
+            }
+        },
         methods: {
             ...mapActions(['removeMessageAction']),
             edit() {

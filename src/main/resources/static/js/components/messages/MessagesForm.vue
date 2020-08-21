@@ -20,12 +20,12 @@
         props: ['messageAttr'],
         data() {
             return {
-                text: '',
-                id: ''
+                text: null,
+                id: null
             }
         },
         watch: {
-            messageAttr(newVal, oldVal) {
+            messageAttr(newVal) {
                 this.text = newVal.text
                 this.id = newVal.id
             }
@@ -42,8 +42,8 @@
                 } else {
                     this.addMessageAction(message)
                 }
-                this.text = ''
-                this.id = ''
+                this.text = null
+                this.id = null
             }
         }
     }

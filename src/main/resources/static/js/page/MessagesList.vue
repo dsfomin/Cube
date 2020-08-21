@@ -7,6 +7,7 @@
                          :message="message"
                          :editMessage="editMessage"
             />
+            <loader></loader>
         </v-layout>
     </v-container>
 </template>
@@ -15,8 +16,10 @@
     import { mapGetters } from 'vuex'
     import MessageRow from 'components/messages/MessageRow.vue'
     import MessagesForm from 'components/messages/MessagesForm.vue'
+    import Loader from "../components/loader/Loader.vue";
     export default {
         components: {
+            Loader,
             MessageRow,
             MessagesForm
         },
