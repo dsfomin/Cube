@@ -6,7 +6,7 @@ import com.fasterxml.jackson.databind.ObjectWriter;
 import dsfomin.cube.domain.User;
 import dsfomin.cube.domain.Views;
 import dsfomin.cube.dto.MessagePageDto;
-import dsfomin.cube.repo.MessageRepo;
+import dsfomin.cube.repo.UserDetailsRepo;
 import dsfomin.cube.service.MessageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -19,23 +19,28 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.HashMap;
+import java.util.Optional;
 
 @Controller
 @RequestMapping("/")
 public class MainController {
     private final MessageService messageService;
+    private final UserDetailsRepo userDetailsRepo;
 
     @Value("${spring.profiles.active}")
     private String profile;
-    private final ObjectWriter writer;
+    private final ObjectWriter messageWriter;
+    private final ObjectWriter profileWriter;
 
     @Autowired
-    public MainController(MessageService messageService, ObjectMapper mapper) {
+    public MainController(MessageService messageService, UserDetailsRepo userDetailsRepo, ObjectMapper mapper) {
         this.messageService = messageService;
+        this.userDetailsRepo = userDetailsRepo;
 
-        this.writer = mapper
-                .setConfig(mapper.getSerializationConfig())
-                .writerWithView(Views.FullMessage.class);
+        ObjectMapper objectMapper = mapper.setConfig(mapper.getSerializationConfig());
+
+        this.messageWriter = objectMapper.writerWithView(Views.FullMessage.class);
+        this.profileWriter = objectMapper.writerWithView(Views.FullProfile.class);;
     }
 
     @GetMapping
@@ -46,13 +51,14 @@ public class MainController {
         HashMap<Object, Object> data = new HashMap<>();
 
         if (user != null) {
-            data.put("profile", user);
+            User userFromDb = userDetailsRepo.findById(user.getId()).get();
+            model.addAttribute("profile", profileWriter.writeValueAsString(userFromDb));
 
             Sort sort = Sort.by(Sort.Direction.DESC, "id");
             PageRequest page = PageRequest.of(0, messageService.MESSAGES_PER_PAGE, sort);
             MessagePageDto messagePageDto = messageService.findAll(page);
 
-            String messages = writer.writeValueAsString(messagePageDto.getMessages());
+            String messages = messageWriter.writeValueAsString(messagePageDto.getMessages());
 
             model.addAttribute("messages", messages);
 
@@ -60,6 +66,7 @@ public class MainController {
             data.put("currentPage", messagePageDto.getCurrentPage());
         } else {
             model.addAttribute("messages", "[]");
+            model.addAttribute("profile", "null");
         }
 
         model.addAttribute("frontendData", data);
