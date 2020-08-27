@@ -1,27 +1,29 @@
 <template>
-    <router-link
-        :to="`/user/${this.user.id}`"
-        class="px-3"
-    >
-        <v-avatar
-                v-if="user && user.userpic"
-                :size="`${size}px`"
+    <div v-if="user">
+        <router-link
+            :to="`/user/${user.id}`"
+            class="px-3"
         >
-            <img
-                    :src="user.userpic"
-                    :alt="user.username"
+            <v-avatar
+                    v-if="user && user.userpic"
+                    :size="`${size}px`"
             >
-        </v-avatar>
+                <img
+                        :src="user.userpic"
+                        :alt="user.username"
+                >
+            </v-avatar>
 
-        <v-avatar
-                v-else
-                :size="`${size}px`"
-                color="indigo"
-        >
-            <v-icon dark>account_circle</v-icon>
-        </v-avatar>
-        <span>{{ userName }}</span>
-    </router-link>
+            <v-avatar
+                    v-else
+                    :size="`${size}px`"
+                    color="indigo"
+            >
+                <v-icon dark>account_circle</v-icon>
+            </v-avatar>
+            <span>{{ userName }}</span>
+        </router-link>
+    </div>
 </template>
 
 <script>

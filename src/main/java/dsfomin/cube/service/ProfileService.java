@@ -1,11 +1,14 @@
 package dsfomin.cube.service;
 
 import dsfomin.cube.domain.User;
+import dsfomin.cube.domain.UserSubscription;
 import dsfomin.cube.repo.UserDetailsRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 public class ProfileService {
@@ -18,12 +21,15 @@ public class ProfileService {
     }
 
     public User updateSubscription(User subscriber, User channel) {
-        Set<User> subscribers = channel.getSubscribers();
+        List<UserSubscription> subscriptions = channel.getSubscribers()
+                .stream()
+                .filter(subscription -> subscription.getSubscriber().equals(subscriber))
+                .collect(Collectors.toList());
 
-        if (subscribers.contains(subscriber)) {
-            subscribers.remove(subscriber);
+        if (subscriptions.isEmpty()) {
+            channel.getSubscribers().add(new UserSubscription(channel, subscriber));
         } else {
-            subscribers.add(subscriber);
+            channel.getSubscribers().removeAll(subscriptions);
         }
 
         return userDetailsRepo.save(channel);

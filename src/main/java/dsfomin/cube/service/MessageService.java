@@ -2,12 +2,14 @@ package dsfomin.cube.service;
 
 import dsfomin.cube.domain.Message;
 import dsfomin.cube.domain.User;
+import dsfomin.cube.domain.UserSubscription;
 import dsfomin.cube.domain.Views;
 import dsfomin.cube.dto.EventType;
 import dsfomin.cube.dto.MessagePageDto;
 import dsfomin.cube.dto.MetaDto;
 import dsfomin.cube.dto.ObjectType;
 import dsfomin.cube.repo.MessageRepo;
+import dsfomin.cube.repo.UserSubscriptionRepo;
 import dsfomin.cube.util.WebSocketSender;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -21,9 +23,11 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 @Service
 public class MessageService {
@@ -36,11 +40,13 @@ public class MessageService {
     public final int MESSAGES_PER_PAGE = 5;
 
     private final MessageRepo messageRepo;
+    private final UserSubscriptionRepo userSubscriptionRepo;
     private final BiConsumer<EventType, Message> webSocketSender;
 
     @Autowired
-    public MessageService(MessageRepo messageRepo, WebSocketSender webSocketSender) {
+    public MessageService(MessageRepo messageRepo, UserSubscriptionRepo userSubscriptionRepo, WebSocketSender webSocketSender) {
         this.messageRepo = messageRepo;
+        this.userSubscriptionRepo = userSubscriptionRepo;
         this.webSocketSender = webSocketSender.getSender(ObjectType.MESSAGE, Views.IdName.class);
     }
 
@@ -111,8 +117,15 @@ public class MessageService {
         return updatedMessage;
     }
 
-    public MessagePageDto findAll(Pageable pageable) {
-        Page<Message> page = messageRepo.findAll(pageable);
+    public MessagePageDto findForUser(Pageable pageable, User user) {
+        List<User> userChannels = userSubscriptionRepo.findBySubscriber(user)
+                .stream()
+                .map(UserSubscription::getChannel)
+                .collect(Collectors.toList());
+
+        userChannels.add(user);
+
+        Page<Message> page = messageRepo.findByAuthorIn(userChannels, pageable);
         return new MessagePageDto(page.getContent(), pageable.getPageNumber(), page.getTotalPages());
     }
 }
